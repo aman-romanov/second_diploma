@@ -1,4 +1,4 @@
-<?php $this->layout('template_login', ['title' => 'Войти']) ?>
+<?php $this->layout('templates/template_login', ['title' => 'Войти']) ?>
 
 <div class="blankpage-form-field">
     <div class="page-logo m-0 w-100 align-items-center justify-content-center rounded border-bottom-left-radius-0 border-bottom-right-radius-0 px-4">

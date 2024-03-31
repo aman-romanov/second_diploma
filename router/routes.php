@@ -1,9 +1,11 @@
 <?php
+    Use App\controllers\newUser;
+
     $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) {
-        $r->addRoute('GET', '/marlin/second_diploma/', ['App\controllers\router','index']);
-        $r->addRoute('GET', '/marlin/second_diploma/register', ['App\controllers\router','register']);
-        $r->addRoute('POST', '/marlin/second_diploma/users', ['App\controllers\router','users']);
-        $r->addRoute('GET', '/articles/{id:\d+}[/{title}]', 'get_article_handler');
+        $r->addRoute('GET', '/marlin/second_diploma/', ['App\controllers\router','login']);
+        $r->addRoute('GET', '/marlin/second_diploma/register', ['App\controllers\Router','register']);
+        $r->addRoute('POST', '/marlin/second_diploma/users', ['App\controllers\Router','users']);
+        $r->addRoute('POST', '/marlin/second_diploma/newuser', ['App\controllers\User','register']);
     });
     
     // Fetch method and URI from somewhere
@@ -24,14 +26,21 @@
         case FastRoute\Dispatcher::METHOD_NOT_ALLOWED:
             $allowedMethods = $routeInfo[1];
             echo '500 Error';
-            // ... 405 Method Not Allowed
             break;
         case FastRoute\Dispatcher::FOUND:
-            $handler = $routeInfo[1];
-            $vars = $routeInfo[2];
-            $controller = new $handler[0];
-            call_user_func([$controller, $handler[1]], $vars);
-            // ... call $handler with $vars
-            break;
+            if(is_array($routeInfo[1])){
+                $handler = $routeInfo[1];
+                $vars = $routeInfo[2];
+                if(!empty($_POST)){
+                    $vars = $_POST;
+                }
+                $controller = new $handler[0];
+                call_user_func([$controller, $handler[1]], $vars);
+            } else{
+                $handler = $routeInfo[1];
+                $vars = $_POST;
+                call_user_func($handler, $vars);
+            }
+            
     }
 ?>

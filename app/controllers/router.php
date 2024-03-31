@@ -10,7 +10,7 @@
         function __construct(){
             $this->templates = new Engine('../app/views');
         }
-        public function index(){
+        public function login(){
             echo $this->templates->render('page_login', ['name' => 'Jonathan']);
         }
         public function register(){
