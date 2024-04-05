@@ -32,6 +32,31 @@
                 flash()->error('Частые попытки регистрации. Попробуйте позднее.');
             }
         }
+
+        public function login($data){
+            if(!empty($data)){
+                try {
+                    $this->auth->login($data['email'], $data['password']);
+                }
+                catch (\Delight\Auth\InvalidEmailException $e) {
+                    flash()->error('Введите корректный почтовый адрес!');
+                }
+                catch (\Delight\Auth\InvalidPasswordException $e) {
+                    flash()->error('Почта или пароль не соответствуют');
+                }
+                catch (\Delight\Auth\EmailNotVerifiedException $e) {
+                    flash()->error('Почта или пароль не соответствуют');
+                }
+                catch (\Delight\Auth\TooManyRequestsException $e) {
+                    flash()->error('Слишком частые попытки авторизации');
+                }
+            }
+        }
+
+        public function logout(){
+            $this->auth->logOut();
+            $this->auth->destroySession();
+        }
     }
 
 ?>

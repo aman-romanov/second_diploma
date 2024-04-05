@@ -13,16 +13,21 @@
                         <a class="nav-link" href="page_login.html">Войти</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Выйти</a>
+                        <a class="nav-link" href="/marlin/second_diploma/logout">Выйти</a>
                     </li>
                 </ul>
             </div>
         </nav>
 
         <main id="js-page-content" role="main" class="page-content mt-3">
-            <div class="alert alert-success">
+            <?php
+                if(isset($flash)){
+                    $flash->display();
+                }
+            ?>
+            <!-- <div class="alert alert-success">
                 Профиль успешно обновлен.
-            </div>
+            </div> -->
             <div class="subheader">
                 <h1 class="subheader-title">
                     <i class='subheader-icon fal fa-users'></i> Список пользователей

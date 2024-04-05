@@ -1,3 +1,7 @@
+<?php
+    use \Tamtamchik\SimpleFlash\Flash;
+    use function Tamtamchik\SimpleFlash\flash;
+?>
 <!DOCTYPE html>
 <html lang="en">
     <head>

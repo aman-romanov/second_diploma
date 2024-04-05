@@ -34,10 +34,15 @@
                             </div>
                             <div class="col-xl-6 ml-auto mr-auto">
                                 <div class="card p-4 rounded-plus bg-faded">
-                                    <div class="alert alert-danger text-dark" role="alert">
+                                    <?php
+                                        if(isset($flash)){
+                                            $flash->display();
+                                        }
+                                    ?>
+                                    <!-- <div class="alert alert-danger text-dark" role="alert">
                                         <strong>Уведомление!</strong> Этот эл. адрес уже занят другим пользователем.
-                                    </div>
-                                    <form id="js-login" novalidate="" action="/marlin/second_diploma/newuser" method="Post">
+                                    </div> -->
+                                    <form id="js-login" novalidate="" action="/marlin/second_diploma/register" method="Post">
                                         <div class="form-group">
                                             <label class="form-label" for="emailverify">Email</label>
                                             <input type="email" id="emailverify" name="email" class="form-control" placeholder="Эл. адрес" required>

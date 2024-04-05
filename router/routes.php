@@ -2,10 +2,12 @@
     Use App\controllers\newUser;
 
     $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) {
-        $r->addRoute('GET', '/marlin/second_diploma/', ['App\controllers\router','login']);
+        $r->addRoute('GET', '/marlin/second_diploma/', ['App\controllers\Router','login']);
         $r->addRoute('GET', '/marlin/second_diploma/register', ['App\controllers\Router','register']);
-        $r->addRoute('POST', '/marlin/second_diploma/users', ['App\controllers\Router','users']);
-        $r->addRoute('POST', '/marlin/second_diploma/newuser', ['App\controllers\User','register']);
+        $r->addRoute('POST', '/marlin/second_diploma/register', ['App\controllers\User','register']);
+        $r->addRoute(['GET', 'POST'], '/marlin/second_diploma/users', ['App\controllers\Router','users']);
+        $r->addRoute('POST', '/marlin/second_diploma/login', ['App\controllers\User','login']);
+        $r->addRoute('GET', '/marlin/second_diploma/logout', ['App\controllers\User','logout']);
     });
     
     // Fetch method and URI from somewhere
