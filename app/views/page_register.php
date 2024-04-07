@@ -1,4 +1,7 @@
-<?php $this->layout('templates/template_register', ['title' => 'Регистрация']) ?>
+<?php 
+    use function Tamtamchik\SimpleFlash\flash;
+    $this->layout('templates/template_register', ['title' => 'Регистрация']);
+?>
     <div class="page-wrapper auth">
         <div class="page-inner bg-brand-gradient">
             <div class="page-content-wrapper bg-transparent m-0">
@@ -34,11 +37,7 @@
                             </div>
                             <div class="col-xl-6 ml-auto mr-auto">
                                 <div class="card p-4 rounded-plus bg-faded">
-                                    <?php
-                                        if(isset($flash)){
-                                            $flash->display();
-                                        }
-                                    ?>
+                                    <?=flash()->display()?>
                                     <!-- <div class="alert alert-danger text-dark" role="alert">
                                         <strong>Уведомление!</strong> Этот эл. адрес уже занят другим пользователем.
                                     </div> -->
