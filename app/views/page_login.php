@@ -18,7 +18,7 @@ $this->layout('templates/template_login', ['title' => 'Войти'])
         <!-- <div class="alert alert-success">
             Регистрация успешна
         </div> -->
-        <form action="/marlin/second_diploma/users" method="Post">
+        <form action="/users" method="Post">
             <div class="form-group">
                 <label class="form-label" for="email">Email</label>
                 <input type="email" name="email" id="username" class="form-control" placeholder="Эл. адрес" value="">
@@ -31,6 +31,6 @@ $this->layout('templates/template_login', ['title' => 'Войти'])
         </form>
     </div>
     <div class="blankpage-footer text-center">
-        Нет аккаунта? <a href="/marlin/second_diploma/register"><strong>Зарегистрироваться</strong>
+        Нет аккаунта? <a href="/register"><strong>Зарегистрироваться</strong>
     </div>
 </div>

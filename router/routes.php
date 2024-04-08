@@ -1,17 +1,17 @@
 <?php
     $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) {
-        $r->addRoute('GET', '/marlin/second_diploma/', ['App\controllers\Router','login']);
-        $r->addRoute('GET', '/marlin/second_diploma/register', ['App\controllers\Router','register']);
-        $r->addRoute('POST', '/marlin/second_diploma/register', ['App\controllers\User','register']);
-        $r->addRoute(['GET', 'POST'], '/marlin/second_diploma/users', ['App\controllers\User','login']);
-        $r->addRoute('POST', '/marlin/second_diploma/login', ['App\controllers\User','login']);
-        $r->addRoute('GET', '/marlin/second_diploma/logout', ['App\controllers\User','logout']);
-        $r->addRoute('GET', '/marlin/second_diploma/create', ['App\controllers\Router','create']);
-        $r->addRoute('GET', '/marlin/second_diploma/edit/{id:\d+}', ['App\controllers\Router','edit']);
-        $r->addRoute('GET', '/marlin/second_diploma/security/{id:\d+}', ['App\controllers\Router','security']);
-        $r->addRoute('GET', '/marlin/second_diploma/status/{id:\d+}', ['App\controllers\Router','status']);
-        $r->addRoute('GET', '/marlin/second_diploma/media/{id:\d+}', ['App\controllers\Router','media']);
-        $r->addRoute('GET', '/marlin/second_diploma/delete/{id:\d+}', ['App\controllers\Router','delete']);
+        $r->addRoute('GET', '/', ['App\controllers\Router','login']);
+        $r->addRoute('GET', '/register', ['App\controllers\Router','register']);
+        $r->addRoute('POST', '/register', ['App\controllers\User','register']);
+        $r->addRoute(['GET', 'POST'], '/users', ['App\controllers\User','login']);
+        $r->addRoute('POST', '/login', ['App\controllers\User','login']);
+        $r->addRoute('GET', '/logout', ['App\controllers\User','logout']);
+        $r->addRoute('GET', '/create', ['App\controllers\Router','create']);
+        $r->addRoute('GET', '/edit/{id:\d+}', ['App\controllers\Router','edit']);
+        $r->addRoute('GET', '/security/{id:\d+}', ['App\controllers\Router','security']);
+        $r->addRoute('GET', '/status/{id:\d+}', ['App\controllers\Router','status']);
+        $r->addRoute('GET', '/media/{id:\d+}', ['App\controllers\Router','media']);
+        $r->addRoute('GET', '/delete/{id:\d+}', ['App\controllers\Router','delete']);
 
     });
     

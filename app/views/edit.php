@@ -1,5 +1,5 @@
 <?php
-    $this->layout('templates/template', ['title' => 'Редактировать'])
+    $this->layout('templates/template', ['title' => 'Редактировать']);
 ?>
 <main id="js-page-content" role="main" class="page-content mt-3">
     <div class="subheader">
