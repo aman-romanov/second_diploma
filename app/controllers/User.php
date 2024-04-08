@@ -52,6 +52,7 @@
                 }
                 try {
                     $this->auth->login($data['email'], $data['password']);
+                    $_SESSION['is_logged_in'] = true;
                 }
                 catch (\Delight\Auth\InvalidEmailException $e) {
                     flash()->error('Введите корректный почтовый адрес!');
@@ -70,11 +71,11 @@
                     $this->router->login();
                 }
             }
-
-            $auth_user = $this->getUserData();
-            $users = $this->getAllUsers();
-            $this->router->users($auth_user, $users);
-            exit;
+            if($_SESSION['is_logged_in'] = true){
+                $auth_user = $this->getUserData();
+                $users = $this->getAllUsers();
+                $this->router->users($auth_user, $users);
+            }
         }
 
         public function logout(){
@@ -105,5 +106,13 @@
         public function getAllUsers(){
             $users = $this->qb->selectAll("users");
             return $users = $this->user->setStatus($users);
+        }
+
+        public function edit($id){
+            if(!$this->auth->isLoggedIn()){
+                header('Location:/');
+            }
+            $user = $this->qb->getUserByID($id);
+            $this->router->edit($id, $user);
         }
     }

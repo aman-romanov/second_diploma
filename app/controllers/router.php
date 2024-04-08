@@ -22,8 +22,8 @@
         public function create(){
             echo $this->templates->render('create_user', ['name' => 'Jonathan']);
         }
-        public function edit($id){
-            echo $this->templates->render('edit', ['id' => $id]);
+        public function edit($id, $user){
+            echo $this->templates->render('edit', ['id' => $id, 'user' => $user]);
         }
         public function media($id){
             echo $this->templates->render('media', ['id' => $id]);
