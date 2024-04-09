@@ -53,9 +53,8 @@
                     ':phone' => $data['phone'],
                     ':address' => $data['address']
                 ]);
-            $sth = $this->pdo->prepare($update->getStatement());
-            if($sth->execute($update->getBindValues())){
-                return true;
-            }
+            $sth = $this->db->prepare($update->getStatement());
+            $sth->execute($update->getBindValues());
+            return true;
         }
     }

@@ -7,7 +7,7 @@
             <i class='subheader-icon fal fa-plus-circle'></i> Редактировать
         </h1>
     </div>
-    <form action="/edit" method="post">
+    <form action="/edit/<?=$user['id']?>" method="post">
         <div class="row">
             <div class="col-xl-6">
                 <div id="panel-1" class="panel">

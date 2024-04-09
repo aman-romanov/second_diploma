@@ -1,32 +1,18 @@
 <?php
     namespace App\controllers;
-    use App\modules\Users;
-    use App\modules\QueryBuilder;
-    use \Tamtamchik\SimpleFlash\Flash;
-    use App\controllers\Router;
+
+    use App\controllers\UserInfo;
     use function Tamtamchik\SimpleFlash\flash;
 
 
 
-    class User {
-
-        private $user;
-        private $auth;
-        private $router;
-        private $qb;
-
-        public function __construct(){
-            $this->user = new Users;
-            $this->auth = $this->user->getAuth();
-            $this->router = new Router;
-            $this->qb = new QueryBuilder;
-        }
+    class User extends UserInfo{
 
         public function register($data){
-            if($this->auth->isLoggedIn()){
+            if($this->state == true){
                 $auth_user = $this->getUserData();
                 $users = $this->getAllUsers();
-                $this->router->users($auth_user, $users);
+                header('Location:/');
             }
             if(empty($data['email'])){
                 flash()->error('Заполните поля');
@@ -39,12 +25,20 @@
                 exit;
             }
             $this->router->register();
-            
-            
+        }
+
+        public function users(){
+            if($_SESSION['is_logged_in'] == true){
+                header('Location:/');
+            }
+
+            $auth_user = $this->getUserData();
+            $users = $this->getAllUsers();;
+            $this->router->users($auth_user, $users);
         }
 
         public function login($data){
-            if(!$this->auth->isLoggedIn()){
+            if($this->status == false && $_SESSION['is_logged_in'] !== true){
                 if(empty($data['email'])){
                     flash()->error('Заполните поля');
                     $this->router->login();
@@ -53,6 +47,8 @@
                 try {
                     $this->auth->login($data['email'], $data['password']);
                     $_SESSION['is_logged_in'] = true;
+                    header('Location:/users');
+
                 }
                 catch (\Delight\Auth\InvalidEmailException $e) {
                     flash()->error('Введите корректный почтовый адрес!');
@@ -71,17 +67,21 @@
                     $this->router->login();
                 }
             }
-            if($_SESSION['is_logged_in'] = true){
-                $auth_user = $this->getUserData();
-                $users = $this->getAllUsers();
-                $this->router->users($auth_user, $users);
-            }
+            
+            // $auth_user = $this->getUserData();
+            // $users = $this->getAllUsers();
+            // var_dump($auth_user);
+            // var_dump($this->status);
+            // var_dump($users);
+            // $this->router->users($auth_user, $users);
+            
         }
 
         public function logout(){
+            unset($_SESSION['is_logged_in']);
             $this->auth->logOut();
             $this->auth->destroySession();
-            $this->router->login();
+            header('Location:/');
         }
         
         public function getUserData(){
@@ -106,13 +106,5 @@
         public function getAllUsers(){
             $users = $this->qb->selectAll("users");
             return $users = $this->user->setStatus($users);
-        }
-
-        public function edit($id){
-            if(!$this->auth->isLoggedIn()){
-                header('Location:/');
-            }
-            $user = $this->qb->getUserByID($id);
-            $this->router->edit($id, $user);
         }
     }
