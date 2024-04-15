@@ -18,7 +18,7 @@ $this->layout('templates/template_login', ['title' => 'Войти'])
         <!-- <div class="alert alert-success">
             Регистрация успешна
         </div> -->
-        <form action="/" method="Post">
+        <form action="/" method="post">
             <div class="form-group">
                 <label class="form-label" for="email">Email</label>
                 <input type="email" name="email" id="username" class="form-control" placeholder="Эл. адрес" value="">

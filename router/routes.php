@@ -1,16 +1,14 @@
 <?php
     $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) {
-        $r->addRoute('GET', '/', ['App\controllers\Router','login']);
-        $r->addRoute('POST', '/', ['App\controllers\User','login']);
+        $r->addRoute(['GET', 'POST'], '/', ['App\controllers\User','login']);
         $r->addRoute('GET', '/users', ['App\controllers\User','users']);
-        $r->addRoute('GET', '/register', ['App\controllers\Router','register']);
+        $r->addRoute('GET', '/register', ['App\controllers\User','register']);
         $r->addRoute('POST', '/register', ['App\controllers\User','register']);
         $r->addRoute('POST', '/login', ['App\controllers\User','login']);
         $r->addRoute('GET', '/logout', ['App\controllers\User','logout']);
-        $r->addRoute('GET', '/create', ['App\controllers\Router','create']);
-        $r->addRoute('GET', '/edit/{id:\d+}', ['App\controllers\Admin','edit']);
-        $r->addRoute('POST', '/edit/{id:\d+}', ['App\controllers\Admin','edit']);
-        $r->addRoute('GET', '/security/{id:\d+}', ['App\controllers\Router','security']);
+        $r->addRoute('GET', '/create', ['App\controllers\User','create']);
+        $r->addRoute(['GET', 'POST'], '/edit/{id:\d+}', ['App\controllers\Admin','edit']);
+        $r->addRoute(['GET', 'POST'], '/security/{id:\d+}', ['App\controllers\Admin','security']);
         $r->addRoute('GET', '/status/{id:\d+}', ['App\controllers\Router','status']);
         $r->addRoute('GET', '/media/{id:\d+}', ['App\controllers\Router','media']);
         $r->addRoute('GET', '/delete/{id:\d+}', ['App\controllers\Router','delete']);

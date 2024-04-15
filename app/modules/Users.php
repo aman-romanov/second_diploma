@@ -8,10 +8,55 @@
 
         private $db;
         private $auth;
+        private $status = false;
+        private $role = 0;
 
         public function __construct(){
-            $this->db = new PDO("mysql:host=localhost;dbname=second_diploma;charset=utf8", "tester", "vOJ1Cls7Q52GTIaT");
+            $this->db = new PDO ("mysql:host=localhost;dbname=second_diploma;charset=utf8mb4", 'tester', 'vOJ1Cls7Q52GTIaT');
             $this->auth = new \Delight\Auth\Auth($this->db);
+        }
+
+        public function login($data){
+            try {
+                $this->auth->login($data['email'], $data['password']);
+                if($this->auth->isLoggedIn()){
+                    $this->status = true;
+                }
+                if($this->auth->hasRole(\Delight\Auth\Role::ADMIN)){
+                    $this->role = 1;
+                }
+                return true;
+
+            }
+            catch (\Delight\Auth\InvalidEmailException $e) {
+                flash()->error('Введите корректный почтовый адрес!');
+            }
+            catch (\Delight\Auth\InvalidPasswordException $e) {
+                flash()->error('Почта или пароль не соответствуют');
+            }
+            catch (\Delight\Auth\EmailNotVerifiedException $e) {
+                flash()->error('Почта не подтверждена');
+            }
+            catch (\Delight\Auth\TooManyRequestsException $e) {
+                flash()->error('Слишком частые попытки авторизации');
+            }
+        }
+
+        public function logout(){
+            unset($_SESSION['is_logged_in']);
+            $this->auth->logOut();
+            $this->auth->destroySession();
+            $this->status = false;
+            $this->role = 0;
+            return true;
+        }
+
+        public function getUserStatus(){
+            return $this->status;
+        }
+
+        public function getUserRole(){
+            return $this->role;
         }
 
         public function createUser($email, $password, $username=null){

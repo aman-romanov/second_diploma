@@ -9,7 +9,7 @@
         private $queryFactory;
 
         public function __construct(){
-            $this->db = new PDO("mysql:host=localhost;dbname=second_diploma;charset=utf8mb4", "tester", "vOJ1Cls7Q52GTIaT");
+            $this->db = new PDO ("mysql:host=localhost;dbname=second_diploma;charset=utf8mb4", 'tester', 'vOJ1Cls7Q52GTIaT');
             $this->queryFactory = new QueryFactory('mysql');
         }
 
@@ -57,4 +57,51 @@
             $sth->execute($update->getBindValues());
             return true;
         }
+
+        public function checkEmail($email){
+            $select = $this->queryFactory->newSelect();
+            $select->cols(['*'])
+                ->from('users')
+                ->where('email = :email', ['email' => $email]);
+            $sth = $this->db->prepare($select->getStatement());
+            $sth->execute($select->getBindValues());
+            $result = $sth->fetch(PDO::FETCH_ASSOC);
+            return $result;
+        }
+
+        public function changeEmail($id, $email){
+            $update = $this->queryFactory->newUpdate();
+            $update
+                ->table('users')
+                ->cols([
+                    'email' => ':email'
+                ])
+                ->where('id = :id')
+                ->bindValues([
+                    ':id' => $id,
+                    ':email' => $email
+                ]);
+            $sth = $this->db->prepare($update->getStatement());
+            $sth->execute($update->getBindValues());
+            return true;
+        }
+
+        public function changePassword($id, $password){
+            $password = password_hash($password, PASSWORD_DEFAULT);
+            $update = $this->queryFactory->newUpdate();
+            $update
+                ->table('users')
+                ->cols([
+                    'password' => ':password'
+                ])
+                ->where('id = :id')
+                ->bindValues([
+                    ':id' => $id,
+                    ':password' => $password
+                ]);
+            $sth = $this->db->prepare($update->getStatement());
+            $sth->execute($update->getBindValues());
+            return true;
+        }
+
     }

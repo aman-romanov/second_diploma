@@ -25,14 +25,14 @@
         public function edit($id, $user){
             echo $this->templates->render('edit', ['id' => $id, 'user' => $user]);
         }
-        public function media($id){
-            echo $this->templates->render('media', ['id' => $id]);
+        public function media($id, $user){
+            echo $this->templates->render('media', ['id' => $id, 'user' => $user]);
         }
-        public function security($id){
-            echo $this->templates->render('security', ['id' => $id]);
+        public function security($id, $user){
+            echo $this->templates->render('security', ['id' => $id, 'user' => $user]);
         }
-        public function status($id){
-            echo $this->templates->render('status', ['id' => $id]);
+        public function status($id, $user){
+            echo $this->templates->render('status', ['id' => $id, 'user' => $user]);
         }
     }
 ?>

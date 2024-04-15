@@ -14,13 +14,12 @@ class UserInfo {
     protected $auth;
     protected $router;
     protected $qb;
-    protected $status = false;
 
     public function __construct(){
-        $this->user = new Users;
+        $this->user = new Users();
+        $this->router = new Router();
+        $this->qb = new QueryBuilder();
         $this->auth = $this->user->getAuth();
-        $this->router = new Router;
-        $this->qb = new QueryBuilder;
     }
 }
 ?>

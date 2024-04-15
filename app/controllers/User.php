@@ -3,69 +3,79 @@
 
     use App\controllers\UserInfo;
     use function Tamtamchik\SimpleFlash\flash;
+    use App\modules\Users;
 
 
 
     class User extends UserInfo{
 
-        public function register($data){
-            if($this->state == true){
-                $auth_user = $this->getUserData();
-                $users = $this->getAllUsers();
-                header('Location:/');
-            }
-            if(empty($data['email'])){
-                flash()->error('Заполните поля');
-               $this->router->register();
-            }
-            $user = $this->user->createUser($data['email'], $data['password']);
-            if($user){
-                flash()->success('Войдите в ваш аккаунт');
-                $this->router->login();
+        public function register($data = null){
+            if($_SERVER['REQUEST_METHOD'] == 'POST'){
+                if(empty($data)){
+                    flash()->error('Заполните поля');
+                    header('Location:/register');
+                }
+                $user = $this->user->createUser($data['email'], $data['password']);
+                if($user){
+                    flash()->success('Войдите в ваш аккаунт');
+                    header('Location:/');
+                    exit;
+                }
+                $this->router->register();
                 exit;
+            }
+            if($this->auth->isLoggedIn()){
+                header('Location:/users');
             }
             $this->router->register();
         }
 
         public function users(){
-            if($_SESSION['is_logged_in'] == true){
+            if(!$this->auth->isLoggedIn()){
                 header('Location:/');
             }
 
             $auth_user = $this->getUserData();
-            $users = $this->getAllUsers();;
+            $users = $this->getAllUsers();
             $this->router->users($auth_user, $users);
         }
 
-        public function login($data){
-            if($this->status == false && $_SESSION['is_logged_in'] !== true){
-                if(empty($data['email'])){
-                    flash()->error('Заполните поля');
-                    $this->router->login();
-                    exit;
-                }
-                try {
-                    $this->auth->login($data['email'], $data['password']);
-                    $_SESSION['is_logged_in'] = true;
+        public function login($data = null){
+            if($_SERVER['REQUEST_METHOD'] == 'GET'){
+                
+                if($this->user->getUserStatus()){
                     header('Location:/users');
+                }
+                $this->router->login();
+                exit;
+            }
+            
+            if(empty($data['email'])){
+                flash()->error('Заполните поля');
+                header('Location:/');
+                exit;
+            }
 
-                }
-                catch (\Delight\Auth\InvalidEmailException $e) {
-                    flash()->error('Введите корректный почтовый адрес!');
-                    $this->router->login();
-                }
-                catch (\Delight\Auth\InvalidPasswordException $e) {
-                    flash()->error('Почта или пароль не соответствуют');
-                    $this->router->login();
-                }
-                catch (\Delight\Auth\EmailNotVerifiedException $e) {
-                    flash()->error('Почта не подтверждена');
-                    $this->router->login();
-                }
-                catch (\Delight\Auth\TooManyRequestsException $e) {
-                    flash()->error('Слишком частые попытки авторизации');
-                    $this->router->login();
-                }
+            try {
+                $this->auth->login($data['email'], $data['password']);
+                header('Location:/users');
+
+            }
+            catch (\Delight\Auth\InvalidEmailException $e) {
+                flash()->error('Введите корректный почтовый адрес!');
+                header('Location:/');
+            }
+            catch (\Delight\Auth\InvalidPasswordException $e) {
+                flash()->error('Почта или пароль не соответствуют');
+                header('Location:/');
+            }
+            catch (\Delight\Auth\EmailNotVerifiedException $e) {
+                flash()->error('Почта не подтверждена');
+                header('Location:/');
+            }
+            catch (\Delight\Auth\TooManyRequestsException $e) {
+                flash()->error('Слишком частые попытки авторизации');
+                header('Location:/');
             }
             
             // $auth_user = $this->getUserData();
@@ -74,8 +84,8 @@
             // var_dump($this->status);
             // var_dump($users);
             // $this->router->users($auth_user, $users);
-            
         }
+
 
         public function logout(){
             unset($_SESSION['is_logged_in']);
@@ -106,5 +116,12 @@
         public function getAllUsers(){
             $users = $this->qb->selectAll("users");
             return $users = $this->user->setStatus($users);
+        }
+
+        public function create($data = null){
+            if(!$this->auth->isLoggedIn()){
+                header('Location:/login');
+            }
+            $this->router->create();
         }
     }
