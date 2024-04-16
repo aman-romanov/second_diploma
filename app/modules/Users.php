@@ -16,49 +16,6 @@
             $this->auth = new \Delight\Auth\Auth($this->db);
         }
 
-        public function login($data){
-            try {
-                $this->auth->login($data['email'], $data['password']);
-                if($this->auth->isLoggedIn()){
-                    $this->status = true;
-                }
-                if($this->auth->hasRole(\Delight\Auth\Role::ADMIN)){
-                    $this->role = 1;
-                }
-                return true;
-
-            }
-            catch (\Delight\Auth\InvalidEmailException $e) {
-                flash()->error('Введите корректный почтовый адрес!');
-            }
-            catch (\Delight\Auth\InvalidPasswordException $e) {
-                flash()->error('Почта или пароль не соответствуют');
-            }
-            catch (\Delight\Auth\EmailNotVerifiedException $e) {
-                flash()->error('Почта не подтверждена');
-            }
-            catch (\Delight\Auth\TooManyRequestsException $e) {
-                flash()->error('Слишком частые попытки авторизации');
-            }
-        }
-
-        public function logout(){
-            unset($_SESSION['is_logged_in']);
-            $this->auth->logOut();
-            $this->auth->destroySession();
-            $this->status = false;
-            $this->role = 0;
-            return true;
-        }
-
-        public function getUserStatus(){
-            return $this->status;
-        }
-
-        public function getUserRole(){
-            return $this->role;
-        }
-
         public function createUser($email, $password, $username=null){
             try {
                 $userId = $this->auth->register($email, $password, $username, function ($selector, $token) {
@@ -102,7 +59,7 @@
             return $this->auth;
         }
 
-        public function setStatus($users){
+        public function getStatus($users){
             $i=0;
             while (isset($users[$i])) {
                 switch($users[$i]['status']){
@@ -120,6 +77,24 @@
             }
 
             return $users;
+        }
+
+        public function convertStatus($status){
+            
+            switch($status){
+                case 'Онлайн':
+                    $status = 0;
+                break;
+                case 'Отошел':
+                    $status = 1;
+                break;
+                case 'Не беспокоить':
+                    $status = 2;
+                break;
+            }
+                
+
+            return $status;
         }
     }
 

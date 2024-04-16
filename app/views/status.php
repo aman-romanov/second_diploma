@@ -7,7 +7,7 @@
             </h1>
 
         </div>
-        <form action="">
+        <form action="/status/<?=$user['id']?>" method="post">
             <div class="row">
                 <div class="col-xl-6">
                     <div id="panel-1" class="panel">
@@ -20,11 +20,11 @@
                                     <div class="col-md-4">
                                         <!-- status -->
                                         <div class="form-group">
-                                            <label class="form-label" for="example-select">Выберите статус</label>
-                                            <select class="form-control" id="example-select">
-                                                <option>Онлайн</option>
-                                                <option>Отошел</option>
-                                                <option>Не беспокоить</option>
+                                            <label for='status' class="form-label" for="example-select">Выберите статус</label>
+                                            <select name='status' class="form-control" id="example-select">
+                                                <option <?php if($user['status'] == 0) echo 'selected';?> >Онлайн</option>
+                                                <option <?php if($user['status'] == 1) echo 'selected';?> >Отошел</option>
+                                                <option <?php if($user['status'] == 2) echo 'selected';?> >Не беспокоить</option>
                                             </select>
                                         </div>
                                     </div>

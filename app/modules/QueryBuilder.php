@@ -104,4 +104,38 @@
             return true;
         }
 
+        public function setStatus($id, $status){
+            $update = $this->queryFactory->newUpdate();
+            $update
+                ->table('users')
+                ->cols([
+                    'status' => ':status'
+                ])
+                ->where('id = :id')
+                ->bindValues([
+                    ':id' => $id,
+                    ':status' => $status
+                ]);
+            $sth = $this->db->prepare($update->getStatement());
+            $sth->execute($update->getBindValues());
+            return true;
+        }
+
+        public function setImage($id, $filename){
+            $update = $this->queryFactory->newUpdate();
+            $update
+                ->table('users')
+                ->cols([
+                    'img' => ':img'
+                ])
+                ->where('id = :id')
+                ->bindValues([
+                    ':id' => $id,
+                    ':img' => $filename
+                ]);
+            $sth = $this->db->prepare($update->getStatement());
+            $sth->execute($update->getBindValues());
+            return true;
+        }
+
     }

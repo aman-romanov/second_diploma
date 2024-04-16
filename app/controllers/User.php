@@ -24,14 +24,15 @@
                 $this->router->register();
                 exit;
             }
-            if($this->auth->isLoggedIn()){
+            if($this->status == true){
                 header('Location:/users');
             }
             $this->router->register();
         }
 
         public function users(){
-            if(!$this->auth->isLoggedIn()){
+            var_dump($this->status);
+            if($this->status == false){
                 header('Location:/');
             }
 
@@ -41,9 +42,10 @@
         }
 
         public function login($data = null){
+            var_dump($this->status);
             if($_SERVER['REQUEST_METHOD'] == 'GET'){
                 
-                if($this->user->getUserStatus()){
+                if($this->status == true){
                     header('Location:/users');
                 }
                 $this->router->login();
@@ -58,6 +60,12 @@
 
             try {
                 $this->auth->login($data['email'], $data['password']);
+                if($this->auth->isLoggedIn()){
+                    $this->status = true;
+                }
+                if($this->auth->hasRole(\Delight\Auth\Role::ADMIN)){
+                    $this->role = 1;
+                }
                 header('Location:/users');
 
             }
@@ -90,7 +98,6 @@
         public function logout(){
             unset($_SESSION['is_logged_in']);
             $this->auth->logOut();
-            $this->auth->destroySession();
             header('Location:/');
         }
         
@@ -115,11 +122,11 @@
 
         public function getAllUsers(){
             $users = $this->qb->selectAll("users");
-            return $users = $this->user->setStatus($users);
+            return $users = $this->user->getStatus($users);
         }
 
         public function create($data = null){
-            if(!$this->auth->isLoggedIn()){
+            if($this->status == false){
                 header('Location:/login');
             }
             $this->router->create();
