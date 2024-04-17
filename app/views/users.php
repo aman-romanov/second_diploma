@@ -41,8 +41,8 @@
                                 <span class="rounded-circle profile-image d-block " style="background-image:url('img/demo/avatars/<?=$user['img']?>'); background-size: cover;"></span>
                             </span>
                             <div class="info-card-text flex-1">
-                                <a href="javascript:void(0);" class="fs-xl text-truncate text-truncate-lg text-info" data-toggle="dropdown" aria-expanded="false">
-                                    <?=$user['username']?>
+                                <a href="/profile/<?=$user['id']?>" class="fs-xl text-truncate text-truncate-lg text-info"> <?=$user['username']?> </a>
+                                <a href="javascript:void(0);>" class="fs-xl text-truncate text-truncate-lg text-info" data-toggle="dropdown" aria-expanded="false">
                                     <?php if($auth['role'] == 1 || $auth['id'] == $user['id']): ?>
                                         <i class="fal fas fa-cog fa-fw d-inline-block ml-1 fs-md"></i>
                                         <i class="fal fa-angle-down d-inline-block ml-1 fs-md"></i>

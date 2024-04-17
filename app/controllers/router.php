@@ -34,5 +34,8 @@
         public function status($id, $user){
             echo $this->templates->render('status', ['id' => $id, 'user' => $user]);
         }
+        public function profile($id, $user){
+            echo $this->templates->render('page_profile', ['id' => $id, 'user' => $user]);
+        }
     }
 ?>

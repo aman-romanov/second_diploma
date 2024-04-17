@@ -125,10 +125,14 @@
             return $users = $this->user->getStatus($users);
         }
 
-        public function create($data = null){
+        public function profile($id){
+            $id = $id['id'];
+            $user = $this->qb->getUserByID($id);
+
             if($this->status == false){
-                header('Location:/login');
+                header('Location:/');
             }
-            $this->router->create();
+            $this->router->profile($id, $user);
+            exit;
         }
     }

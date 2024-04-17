@@ -58,6 +58,27 @@
             return true;
         }
 
+        public function updateSocials($id, $data=[]){
+            $update = $this->queryFactory->newUpdate();
+            $update
+                ->table('users')
+                ->cols([
+                    'instagram' => ':instagram',
+                    'telegram' => ':telegram',
+                    'vk' => ':vk'
+                ])
+                ->where('id = :id')
+                ->bindValues([
+                    ':id' => $id,
+                    ':instagram' => $data['instagram'],
+                    ':telegram' => $data['telegram'],
+                    ':vk' => $data['vk']
+                ]);
+            $sth = $this->db->prepare($update->getStatement());
+            $sth->execute($update->getBindValues());
+            return true;
+        }
+
         public function checkEmail($email){
             $select = $this->queryFactory->newSelect();
             $select->cols(['*'])
@@ -135,6 +156,17 @@
                 ]);
             $sth = $this->db->prepare($update->getStatement());
             $sth->execute($update->getBindValues());
+            return true;
+        }
+
+        public function deleteUser($id){
+            $delete = $this->queryFactory->newDelete();
+            $delete
+                ->from('users')
+                ->where('id = :id')
+                ->bindValue(':id', $id);
+            $sth = $this->db->prepare($delete->getStatement());
+            $sth->execute($delete->getBindValues());
             return true;
         }
 

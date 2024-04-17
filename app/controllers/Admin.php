@@ -91,23 +91,18 @@
             $id = $id['id'];
             $user = $this->qb->getUserByID($id);
 
-            if($this->status == false){
-                header('Location:/');
-                exit;
-            }
-
             if($_SERVER['REQUEST_METHOD'] == 'POST'){
                 $image = $_FILES['image'];
                 if(!empty($user['img'])){
-                    self::deleteImage($user['img']);
+                    $this->img->deleteImage($user['img']);
                     $error = $_FILES['image']['error'];
-                    if(self::checkForErrors($error)){
+                    if($this->img->checkForErrors($error)){
                         header('Location:/users');;
                     };
 
                     $image_name = $_FILES['image']['name'];
                     $tmp_name = $_FILES['image']['tmp_name'];
-                    $filename = self::uploadImage($image_name, $tmp_name);
+                    $filename = $this->img->uploadImage($image_name, $tmp_name);
                     $this->qb->setImage($id, $filename);
                     
                     flash()->success('Аватар обновлен');
@@ -119,64 +114,48 @@
             $this->router->media($id, $user);
         }
 
-        function uploadImage($image_name, $tmp_name){
-            $pathinfo = pathinfo($image_name);
-            $base = $pathinfo['filename'];
-            $base = preg_replace('/[^a-zA-Z0-9_-]/', '_', $base);
-            $filename = $base . "." . $pathinfo['extension'];
-            $destination = __DIR__ . '../../public/img/demo/avatars/' . $filename;
-            $i = 1;
-            while(file_exists($destination)){
-                $filename = $base . "($i)." . $pathinfo['extension'];
-                $destination = __DIR__ . '../../public/img/demo/avatars/' . $filename;
-                $i++;
-            }
-            if(move_uploaded_file($tmp_name, $destination)){
-                echo 123;
+        public function delete($id){
+            $id = $id['id'];
+            $user = $this->qb->getUserByID($id);
+            
+            if($this->status == false){
+                header('Location:/');
                 exit;
-            };
-            return $filename;
+            }
+
+            $this->qb->deleteUser($id);
+            header('Location:/users');
         }
 
-        function deleteImage($img){
-            $destination = __DIR__ . '../../public//img/demo/avatars/' . $img;
-            if(file_exists($destination)){
-                unlink(__DIR__ . '../../public//img/demo/avatars/' . $img);
+        public function create($data){
+            if($this->status == false){
+                header('Location:/');
+                exit;
             }
-        }
 
-        function checkForErrors($error){
-            switch($error){
-                case UPLOAD_ERR_OK:
-                    break;
-                case UPLOAD_ERR_NO_FILE:
-                    flash()->error("Прикрепите файл");
-                    break;
-                case UPLOAD_ERR_INI_SIZE:
-                    flash()->error("Размер изображения не должно превышать 2M");
-                    break;
-                case UPLOAD_ERR_NO_TMP_DIR:
-                    flash()->error("Папка не найденa");
-                    break;
-                case UPLOAD_ERR_CANT_WRITE:
-                    flash()->error("Изображение не переместилось");
-                    break;
-                default:
-                    flash()->error("Возникла ошибка");
-                    break;
-            }
-            $mime_types = ['image/jpg', 'image/jpeg', 'image/png'];
-            if($_FILES['image']['tmp_name']>0){
-                $finfo = finfo_open(FILEINFO_MIME_TYPE);
-                $mime_type = finfo_file($finfo, $_FILES['image']['tmp_name']);
-                if(!in_array($mime_type, $mime_types)){
-                    flash()->error("Изображение должно соответствовать форматам: jpeg/jpg/png");
+            if($_SERVER['REQUEST_METHOD'] == 'POST'){
+                $image = $_FILES['image'];
+                $error = $_FILES['image']['error'];
+                $image_name = $_FILES['image']['name'];
+                $tmp_name = $_FILES['image']['tmp_name'];
+                if($this->user->createUser($data['email'], $data['password'], $data['username'])){
+                    $user = $this->qb->checkEmail($data['email']);
+                    $this->qb->updateData($user['id'], $data);
+                    $this->qb->updateSocials($user['id'], $data);
+
+                    $status = $this->user->convertStatus($data['status']);
+                    $this->qb->setStatus($user['id'], $status);
+
+                    $this->img->checkForErrors($error);
+                    $filename = $this->img->uploadImage($image_name, $tmp_name);
+                    $this->qb->setImage($user['id'], $filename);
+
+                    flash()->success('Пользователь добавлен');
                 }
+                header('Location:/users');
             }
-            if(flash()->display('error')){
-                return true;
-            }
-            return false;
+
+            $this->router->create();
         }
     }
 
