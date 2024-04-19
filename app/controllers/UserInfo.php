@@ -19,7 +19,7 @@ class UserInfo {
     protected $status = false;
     protected $role = 0;
 
-    public function __construct(Users $user, Router $router, QueryBuilder $qb, Image $img){
+    public function __construct(){
         $this->user = new Users();
         $this->router = new Router();
         $this->qb = new QueryBuilder();

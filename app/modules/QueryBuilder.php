@@ -8,9 +8,9 @@
         private $db;
         private $queryFactory;
 
-        public function __construct(PDO $pdo, QueryFactory $qf){
-            $this->db = $pdo;
-            $this->queryFactory = $qf;
+        public function __construct(){
+            $this->db = new PDO("mysql:host=localhost;dbname=second_diploma;charset=utf8mb4", 'tester', 'vOJ1Cls7Q52GTIaT');
+            $this->queryFactory = new QueryFactory('mysql');
         }
 
         public function selectAll($table){
