@@ -1,17 +1,22 @@
 <?php
 
 namespace App\modules;
+
+use DI\Container;
 use DI\ContainerBuilder;
+use Aura\SqlQuery\QueryFactory;
+use League\Plates\Engine;
+use \Tamtamchik\SimpleFlash\Flash;
+use function Tamtamchik\SimpleFlash\flash;
+use Delight\Auth\Auth;
 use FastRoute;
+use PDO;
 
 class App {
-
     private $container;
 
-
-    public function __construct($container){
-        $this->container = $container;
-
+    public function __construct(ContainerBuilder $contBuilder) {
+        $this->container = $contBuilder;
         $this->container->addDefinitions([
             QueryFactory::class => function () {
                 return new QueryFactory('mysql');
@@ -30,26 +35,35 @@ class App {
             Engine::class => function () {
                 return new Engine('../views');
             },
+
+            Auth::class => function () {
+                $cont = $this->container->build();
+                return new Auth($cont->get('PDO'));
+            },
+
+            Users::class => function () {
+                $cont = $this->container->build();
+                return new Users($cont->get('PDO'));
+            }
         ]);
     }
 
     public function router(){
 
         $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) {
-            $r->addRoute('GET', '/', ['App\controllers\Router','login']);
-            $r->addRoute('POST', '/', ['App\controllers\User','login']);
-            $r->addRoute('GET', '/users', ['App\controllers\User','users']);
-            $r->addRoute('GET', '/register', ['App\controllers\Router','register']);
+            $r->addRoute(['GET', 'POST'], '/', ['App\controllers\User','login']);
+            $r->addRoute(['GET', 'POST'], '/users', ['App\controllers\User','users']);
+            $r->addRoute('GET', '/register', ['App\controllers\User','register']);
             $r->addRoute('POST', '/register', ['App\controllers\User','register']);
             $r->addRoute('POST', '/login', ['App\controllers\User','login']);
             $r->addRoute('GET', '/logout', ['App\controllers\User','logout']);
-            $r->addRoute('GET', '/create', ['App\controllers\Router','create']);
-            $r->addRoute('GET', '/edit/{id:\d+}', ['App\controllers\Admin','edit']);
-            $r->addRoute('POST', '/edit/{id:\d+}', ['App\controllers\Admin','edit']);
-            $r->addRoute('GET', '/security/{id:\d+}', ['App\controllers\Router','security']);
-            $r->addRoute('GET', '/status/{id:\d+}', ['App\controllers\Router','status']);
-            $r->addRoute('GET', '/media/{id:\d+}', ['App\controllers\Router','media']);
-            $r->addRoute('GET', '/delete/{id:\d+}', ['App\controllers\Router','delete']);
+            $r->addRoute('GET', '/profile/{id:\d+}', ['App\controllers\User','profile']);
+            $r->addRoute(['GET', 'POST'], '/create', ['App\controllers\Admin','create']);
+            $r->addRoute(['GET', 'POST'], '/edit/{id:\d+}', ['App\controllers\Admin','edit']);
+            $r->addRoute(['GET', 'POST'], '/security/{id:\d+}', ['App\controllers\Admin','security']);
+            $r->addRoute(['GET', 'POST'], '/status/{id:\d+}', ['App\controllers\Admin','status']);
+            $r->addRoute(['GET', 'POST'], '/media/{id:\d+}', ['App\controllers\Admin','media']);
+            $r->addRoute('GET', '/delete/{id:\d+}', ['App\controllers\Admin','delete']);
     
         });
         
@@ -79,8 +93,8 @@ class App {
                 if(empty($routeInfo[2])){
                     $vars = $_POST;
                 }
-                $caller = $this->container->build();
-                $caller->call($routeInfo[1], $vars);
+                $cont = $this->container->build();
+                $cont->call($handler, $vars);
                 
         }
     }

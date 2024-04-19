@@ -1,7 +1,10 @@
 <?php
     namespace App\modules;
-    use \Tamtamchik\SimpleFlash\Flash;
+    
+    use Delight\Auth\Auth;
+    use Tamtamchik\SimpleFlash\Flash;
     use function Tamtamchik\SimpleFlash\flash;
+    use Aura\SqlQuery\QueryFactory;
     use PDO;
 
     class Users {
@@ -12,8 +15,8 @@
         private $role = 0;
 
         public function __construct(){
-            $this->db = new PDO ("mysql:host=localhost;dbname=second_diploma;charset=utf8mb4", 'tester', 'vOJ1Cls7Q52GTIaT');
-            $this->auth = new \Delight\Auth\Auth($this->db);
+            $this->db = new PDO("mysql:host=localhost;dbname=second_diploma;charset=utf8mb4", 'tester', 'vOJ1Cls7Q52GTIaT');
+            $this->auth = new Auth($this->db);
         }
 
         public function createUser($email, $password, $username=null){

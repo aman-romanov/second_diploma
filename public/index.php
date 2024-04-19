@@ -1,8 +1,6 @@
 <?php
-
-    use \Tamtamchik\SimpleFlash\Flash;
-    use function Tamtamchik\SimpleFlash\flash;
     use DI\ContainerBuilder;
+    use App\modules\App;
 
 
     if( !session_id() ) {
@@ -10,6 +8,9 @@
     }
 
     require_once '../vendor/autoload.php';
-    include '../router/routes.php';
+
+    $contBuilder = new ContainerBuilder();
+    $app = new App($contBuilder);
+    $app->router();
 
 ?>
