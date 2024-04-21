@@ -7,8 +7,8 @@
         private $templates;
 
 
-        function __construct(){
-            $this->templates = new Engine('../app/views');
+        function __construct(Engine $engine){
+            $this->templates = $engine;
         }
         public function login(){
             echo $this->templates->render('page_login', ['name' => 'Jonathan']);

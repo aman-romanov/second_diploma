@@ -1,6 +1,5 @@
 <?php
     use DI\ContainerBuilder;
-    use App\modules\App;
 
 
     if( !session_id() ) {
@@ -8,9 +7,9 @@
     }
 
     require_once '../vendor/autoload.php';
-
     $contBuilder = new ContainerBuilder();
-    $app = new App($contBuilder);
-    $app->router();
+    $cont = $contBuilder->build();
+    $app = $cont->get("App\modules\App");
+
 
 ?>

@@ -10,7 +10,7 @@
     class Admin extends User {
 
         public function edit($id){
-            $id = $id['id'];
+            
             $user = $this->qb->getUserByID($id);
 
             if($this->status == false){
@@ -31,7 +31,6 @@
         }
 
         public function security($id){
-            $id = $id['id'];
             $user = $this->qb->getUserByID($id);
 
             if($this->status == false){
@@ -69,7 +68,6 @@
         }
 
         public function status($id){
-            $id = $id['id'];
             $user = $this->qb->getUserByID($id);
 
             if($this->status == false){
@@ -88,25 +86,25 @@
         }
 
         public function media($id){
-            $id = $id['id'];
             $user = $this->qb->getUserByID($id);
 
             if($_SERVER['REQUEST_METHOD'] == 'POST'){
                 $image = $_FILES['image'];
                 if(!empty($user['img'])){
                     $this->img->deleteImage($user['img']);
-                    $error = $_FILES['image']['error'];
-                    if($this->img->checkForErrors($error)){
-                        header('Location:/users');;
-                    };
-
-                    $image_name = $_FILES['image']['name'];
-                    $tmp_name = $_FILES['image']['tmp_name'];
-                    $filename = $this->img->uploadImage($image_name, $tmp_name);
-                    $this->qb->setImage($id, $filename);
-                    
-                    flash()->success('Аватар обновлен');
                 }
+
+                $error = $_FILES['image']['error'];
+                if($this->img->checkForErrors($error)){
+                    header('Location:/users');;
+                };
+
+                $image_name = $_FILES['image']['name'];
+                $tmp_name = $_FILES['image']['tmp_name'];
+                $filename = $this->img->uploadImage($image_name, $tmp_name);
+                $this->qb->setImage($id, $filename);
+                
+                flash()->success('Аватар обновлен');
 
                 header('Location:/users');
             }
@@ -115,7 +113,6 @@
         }
 
         public function delete($id){
-            $id = $id['id'];
             $user = $this->qb->getUserByID($id);
             
             if($this->status == false){
@@ -127,7 +124,8 @@
             header('Location:/users');
         }
 
-        public function create($data){
+        public function create($data = null){
+            $data = $_POST;
             if($this->status == false){
                 header('Location:/');
                 exit;

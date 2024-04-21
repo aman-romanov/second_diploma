@@ -10,6 +10,7 @@
     class User extends UserInfo{
 
         public function register($data = null){
+            $data = $_POST;
             if($_SERVER['REQUEST_METHOD'] == 'POST'){
                 if(empty($data)){
                     flash()->error('Заполните поля');
@@ -31,7 +32,6 @@
         }
 
         public function users(){
-            var_dump($this->status);
             if($this->status == false){
                 header('Location:/');
             }
@@ -42,7 +42,7 @@
         }
 
         public function login($data = null){
-            var_dump($this->status);
+            $data = $_POST;
             if($_SERVER['REQUEST_METHOD'] == 'GET'){
                 
                 if($this->status == true){
@@ -51,6 +51,8 @@
                 $this->router->login();
                 exit;
             }
+
+            
             
             if(empty($data['email'])){
                 flash()->error('Заполните поля');

@@ -19,11 +19,11 @@ class UserInfo {
     protected $status = false;
     protected $role = 0;
 
-    public function __construct(){
-        $this->user = new Users();
-        $this->router = new Router();
-        $this->qb = new QueryBuilder();
-        $this->img = new Image();
+    public function __construct(Users $user, Router $router, QueryBuilder $qb, Image $img){
+        $this->user = $user;
+        $this->router = $router;
+        $this->qb = $qb;
+        $this->img = $img;
         $this->auth = $this->user->getAuth();
         if($this->auth->isLoggedIn()){
             $this->status = true;

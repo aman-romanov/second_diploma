@@ -33,19 +33,16 @@ class App {
             },
         
             Engine::class => function () {
-                return new Engine('../views');
+                return new Engine('../app/views');
             },
 
             Auth::class => function () {
                 $cont = $this->container->build();
                 return new Auth($cont->get('PDO'));
-            },
-
-            Users::class => function () {
-                $cont = $this->container->build();
-                return new Users($cont->get('PDO'));
             }
+            
         ]);
+        self::router();
     }
 
     public function router(){
@@ -87,12 +84,8 @@ class App {
                 echo '500 Error';
                 break;
             case FastRoute\Dispatcher::FOUND:
-                
                 $handler = $routeInfo[1];
                 $vars = $routeInfo[2];
-                if(empty($routeInfo[2])){
-                    $vars = $_POST;
-                }
                 $cont = $this->container->build();
                 $cont->call($handler, $vars);
                 

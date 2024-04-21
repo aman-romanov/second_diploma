@@ -14,9 +14,9 @@
         private $status = false;
         private $role = 0;
 
-        public function __construct(){
-            $this->db = new PDO("mysql:host=localhost;dbname=second_diploma;charset=utf8mb4", 'tester', 'vOJ1Cls7Q52GTIaT');
-            $this->auth = new Auth($this->db);
+        public function __construct(PDO $pdo, Auth $auth){
+            $this->db = $pdo;
+            $this->auth = $auth;
         }
 
         public function createUser($email, $password, $username=null){
