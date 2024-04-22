@@ -3,7 +3,19 @@ namespace App\modules;
 use \Tamtamchik\SimpleFlash\Flash;
 use function Tamtamchik\SimpleFlash\flash;
 
+/**
+ * Класс с методами для загрузки изображения в бд.
+ */
+
 class Image {
+
+    /**
+     * Загрузка прикрепленного изображения в папку avatars. Метод принимает название файла и директорию к временной папке из глобального массива $_FILES. При наличии в имении странных символов, они заменяются на нижнее подчеркивание. Если файл с таким названием уже существует, то в название добавляется число и проверяется повторно.
+     * 
+     * @param string $image_name Название файла
+     * @param string $tmp_name Путь к временной папке хранения
+     * @return string $filename Название файла вместе с расширением
+     */
 
     public function uploadImage($image_name, $tmp_name){
         $pathinfo = pathinfo($image_name);
@@ -20,6 +32,13 @@ class Image {
         move_uploaded_file($tmp_name, $destination);
         return $filename;
     }
+
+    /**
+     * Удаление старой фотографии при загрузке новой. 
+     * 
+     * @param string $img Название файла
+     * @return null
+     */
     
     public function deleteImage($img){
         $destination = $_SERVER['DOCUMENT_ROOT'] . '/img/demo/avatars/' . $img;
@@ -27,6 +46,13 @@ class Image {
             unlink($_SERVER['DOCUMENT_ROOT'] . '/img/demo/avatars/' . $img);
         }
     }
+
+    /**
+     * Проверка ошибок при загрузке фотографии пользователя. Название ошибки берется с глобального массива $_FILES и после через цикл проверяется на соответсвие перечисленных ошибок. При наличии ошибки, она записвается во флэш сообщение. Если флэш сообщение пустое, то возрващается отрицательное значение.
+     * 
+     * @param string $img Название файла
+     * @return boolean Возвращает false, при отсутсвии ошибок и обратное при наличии
+     */
     
     public function checkForErrors($error){
         switch($error){

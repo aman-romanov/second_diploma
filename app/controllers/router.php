@@ -2,6 +2,10 @@
     namespace App\controllers;
     use League\Plates\Engine;
 
+    /**
+     * Класс роутера для вывода верстки страниц.
+     */
+
     Class Router {
 
         private $templates;

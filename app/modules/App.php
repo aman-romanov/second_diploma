@@ -12,8 +12,19 @@ use Delight\Auth\Auth;
 use FastRoute;
 use PDO;
 
+/**
+ * Класс для запуска веб-приложения.
+ */
+
 class App {
     private $container;
+
+    /**
+     * Запуск конструктора класса. Принимает контейнер для создания других классов. После на основе внесенных значении, запускается роутер, который в свое время запускает обработчик запросов.
+     * 
+     * @param obj $contBuilder Объект контейнера
+     * @return null 
+     */
 
     public function __construct(ContainerBuilder $contBuilder) {
         $this->container = $contBuilder;
@@ -44,6 +55,12 @@ class App {
         ]);
         self::router();
     }
+
+    /**
+     * Запуск роутера
+     * 
+     * @return null 
+     */
 
     public function router(){
 

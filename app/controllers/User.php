@@ -5,9 +5,20 @@
     use function Tamtamchik\SimpleFlash\flash;
     use App\modules\Users;
 
-
+    /**
+     * Класс с функционалом обычного пользователя
+     */
 
     class User extends UserInfo{
+
+        /**
+         * Регистрация пользователя через почту и пароль. Метод сначала проверяет тип запроса на Get и Post. При Get запросе проверяется авторизован ли пользователь. При положительном ответе идет переадресация на главную страницу, или же выводится верстка страницы регистрации. 
+         * 
+         * При Post запросе, сначала полученные проходят валидацию на заполненность, после идет регистрация пользователя посредством компонента и переадресация на главную страницу.
+         * 
+         * @param array $data Данные пользователя
+         * @return null 
+         */
 
         public function register($data = null){
             $data = $_POST;
@@ -31,6 +42,13 @@
             $this->router->register();
         }
 
+        /**
+         * Верстка главной страницы со списком пользователей. Сначала проверяется авторизация пользователя. После через методы компонента Auth извлекаются данные авторизованного пользователя и данные всех пользователей в бд. Параметры передаются в верстку страницы в качестве аргументов и после выводится страница.
+         * 
+         * @param null 
+         * @return null 
+         */
+
         public function users(){
             if($this->status == false){
                 header('Location:/');
@@ -40,6 +58,15 @@
             $users = $this->getAllUsers();
             $this->router->users($auth_user, $users);
         }
+
+        /**
+         * Автризация пользователя через почту и пароль. Сначала идет проверка метода запроса на GET. При положительном ответе, проверется статус пользователя на авторизацию и после верстка страницы логина. 
+         * 
+         * При POST запросе, сначала идет валидация полученных данных и после авторизация через метод компонента. При удачном авторизации, в свойства $status и $role передаются данные пользователя. В конце идет переадресация на главную страницу. Если возникнет ошибка, то текст записывается в метод flash() и переадресация обратно на страницу логина.
+         * 
+         * @param array $data Данные пользователя
+         * @return null 
+         */
 
         public function login($data = null){
             $data = $_POST;
@@ -96,39 +123,54 @@
             // $this->router->users($auth_user, $users);
         }
 
-
+        /**
+         * Выход пользователя с аккаунта и переадресация на страницу логина.
+         * 
+         * @param null 
+         * @return null 
+         */
         public function logout(){
-            unset($_SESSION['is_logged_in']);
             $this->auth->logOut();
             header('Location:/');
         }
+
+        /**
+         * Getter данных авторизованного пользователя из свойств класса.
+         * 
+         * @param null 
+         * @return null 
+         */
         
         public function getUserData(){
-            $all_roles = $this->auth->getRoles();
-            $role = 0;
-            foreach($all_roles as $role){
-                switch($role){
-                    case "ADMIN":
-                        $role = 1;
-                    break;
-                }
-            }
             $data = [
                 'id' => $this->auth->getUserId(),
-                'role' => $role,
-                'is_logged_in' => true
+                'role' => $this->role,
+                'is_logged_in' => $this->state
             ];
             return $data;
             
         }
+
+        /**
+         * Getter всех пользователей из бд.
+         * 
+         * @param null 
+         * @return array Данные всех пользователей из бд. 
+         */
 
         public function getAllUsers(){
             $users = $this->qb->selectAll("users");
             return $users = $this->user->getStatus($users);
         }
 
+        /**
+         * Обработчик профиля пользователя. На основе id пользователя идет запрос в бд. После валидация пользователя на авторизацию и при положительном ответе - верстка профиля пользователя. В аргкменты методы класса Router передаются данные пользователя и id.
+         * 
+         * @param int id пользователя
+         * @return null 
+         */
+
         public function profile($id){
-            $id = $id['id'];
             $user = $this->qb->getUserByID($id);
 
             if($this->status == false){

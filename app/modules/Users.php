@@ -7,6 +7,10 @@
     use Aura\SqlQuery\QueryFactory;
     use PDO;
 
+    /**
+     * Класс взаимодействия пользователя с бд.
+     */
+
     class Users {
 
         private $db;
@@ -18,6 +22,15 @@
             $this->db = $pdo;
             $this->auth = $auth;
         }
+
+        /**
+         * Создание нового пользователя на основе почты, пароля и имении. Изначально имя в значении null, так как во время регисрации нет поля для имени.
+         * 
+         * @param string $email Почта пользователя
+         * @param string $passsword Пароль пользователя
+         * @param string $username Имя пользователя
+         * @return bool true при создании записи
+         */
 
         public function createUser($email, $password, $username=null){
             try {
@@ -40,6 +53,14 @@
             }
         }
 
+        /**
+         * Авторизация пользователя с помощью почты и пароля
+         * 
+         * @param string $email Почта пользователя
+         * @param string $passsword Пароль пользователя
+         * @return null 
+         */
+
         public function authenticate($data){
             try {
                 $this->auth->login($data['email'], $data['password']);
@@ -58,9 +79,22 @@
             }
         }
 
+        /**
+         * Getter для компонента Auth
+         * 
+         * @return obj 
+         */
+
         public function getAuth(){
             return $this->auth;
         }
+
+        /**
+         * Конвертация статусов всех пользователй в текстовый формат. 
+         * 
+         * @param array $users Данные всех пользователей
+         * @return array $result Ассоциативный массив с данными пользователя 
+         */
 
         public function getStatus($users){
             $i=0;
@@ -81,6 +115,13 @@
 
             return $users;
         }
+
+        /**
+         * Конвертация статуса пользователя в числовое значение. Делается потому, что столбец может принимать лишь числовые значения. Так было указано при создании таблицы с помощь компонента Auth.
+         * 
+         * @param string $status Статус пользователя
+         * @return int $status Конвертированный статус
+         */
 
         public function convertStatus($status){
             

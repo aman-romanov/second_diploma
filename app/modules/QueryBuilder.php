@@ -4,6 +4,10 @@
     use Aura\SqlQuery\QueryFactory;
     use PDO;
 
+    /**
+     * Класс запросов в бд.
+     */
+
     class QueryBuilder {
         private $db;
         private $queryFactory;
@@ -12,6 +16,13 @@
             $this->db = $pdo;
             $this->queryFactory = $qf;
         }
+
+        /**
+         * Запрос данных всех пользователей в таблице.
+         * 
+         * @param string $table Название таблицы
+         * @return array $result Ассоциативный массив с данными пользователей 
+         */
 
         public function selectAll($table){
             $select = $this->queryFactory->newSelect();
@@ -24,6 +35,13 @@
             return $result;
         }
 
+        /**
+         * Запрос данных одного пользователя по Id.
+         * 
+         * @param int $id Id пользователя
+         * @return array $result Ассоциативный массив с данными пользователя 
+         */
+
         public function getUserByID($id){
             $select = $this->queryFactory->newSelect();
             $select->cols(['*'])
@@ -34,6 +52,13 @@
             $result = $sth->fetch(PDO::FETCH_ASSOC);
             return $result;
         }
+        /**
+         * Обновление личных данных пользователя
+         * 
+         * @param int $id Id пользователя
+         * @param array $data Данные пользователя с формы
+         * @return boolean $result true если данные обновлены
+         */
 
         public function updateData($id, $data=[]){
             $update = $this->queryFactory->newUpdate();
@@ -58,6 +83,14 @@
             return true;
         }
 
+        /**
+         * Обновление данных соц сетей пользователя
+         * 
+         * @param int $id Id пользователя
+         * @param array $data Данные пользователя с формы
+         * @return boolean $result true если данные обновлены
+         */
+
         public function updateSocials($id, $data=[]){
             $update = $this->queryFactory->newUpdate();
             $update
@@ -79,6 +112,13 @@
             return true;
         }
 
+        /**
+         * Проверка наличие пользователя по почте
+         * 
+         * @param string $email Почта пользователя
+         * @return array $result Ассоциативный массив с данными пользователя 
+         */
+
         public function checkEmail($email){
             $select = $this->queryFactory->newSelect();
             $select->cols(['*'])
@@ -89,6 +129,13 @@
             $result = $sth->fetch(PDO::FETCH_ASSOC);
             return $result;
         }
+         /**
+         * Смена почты пользователя
+         * 
+         * @param int $id Id пользователя
+         * @param string $email Почта пользователя
+         * @return boolean $result true если данные обновлены
+         */
 
         public function changeEmail($id, $email){
             $update = $this->queryFactory->newUpdate();
@@ -106,6 +153,14 @@
             $sth->execute($update->getBindValues());
             return true;
         }
+
+        /**
+         * Смена пароля пользователя
+         * 
+         * @param int $id Id пользователя
+         * @param string $password Пароль пользователя
+         * @return boolean $result true если данные обновлены
+         */
 
         public function changePassword($id, $password){
             $password = password_hash($password, PASSWORD_DEFAULT);
@@ -125,6 +180,14 @@
             return true;
         }
 
+        /**
+         * Обноваление статуса пользователя
+         * 
+         * @param int $id Id пользователя
+         * @param int $status Стаус пользователя конвертированное в число
+         * @return boolean $result true если данные обновлены
+         */
+
         public function setStatus($id, $status){
             $update = $this->queryFactory->newUpdate();
             $update
@@ -142,6 +205,14 @@
             return true;
         }
 
+        /**
+         * Обноваление аватарки пользователя
+         * 
+         * @param int $id Id пользователя
+         * @param string $string Наименование файла
+         * @return boolean $result true если данные обновлены
+         */
+
         public function setImage($id, $filename){
             $update = $this->queryFactory->newUpdate();
             $update
@@ -158,6 +229,13 @@
             $sth->execute($update->getBindValues());
             return true;
         }
+
+        /**
+         * Удаление записи с пользователем
+         * 
+         * @param int $id Id пользователя
+         * @return boolean $result true если запись удалена
+         */
 
         public function deleteUser($id){
             $delete = $this->queryFactory->newDelete();

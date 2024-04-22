@@ -7,7 +7,9 @@ use \Tamtamchik\SimpleFlash\Flash;
 use App\controllers\Router;
 use function Tamtamchik\SimpleFlash\flash;
 
-
+/**
+ * Базовый класс пользователя для храннеия всех свойств и нужных компонентов.
+ */
 
 class UserInfo {
 
